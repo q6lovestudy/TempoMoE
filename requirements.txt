@@ -1,0 +1,11 @@
+# 仅供参考的依赖列表，不强制版本
+# 你的 fsep 环境如果已经能加载 Kimi-VL，下面这些大概率都装好了
+torch>=2.1
+transformers==4.50.3
+accelerate
+datasets
+pyyaml
+numpy
+pillow
+tiktoken
+blobfile

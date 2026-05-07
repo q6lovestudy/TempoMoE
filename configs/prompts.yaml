@@ -1,0 +1,23 @@
+# 用于 fast/slow/default 对比实验的 prompt 模板
+# 每个类别 3 个变体，避免单一写法污染信号
+# 指令文本会拼接在用户问题之前，用 <instruction> 标签便于解析时识别 token 边界
+
+fast:
+  - id: fast_v1
+    text: "Answer the question directly based on the image. Do not provide step-by-step reasoning. Give only the final answer."
+  - id: fast_v2
+    text: "Look at the image and provide the final answer as concisely as possible. Avoid explaining your reasoning process."
+  - id: fast_v3
+    text: "Based on the image, respond with the answer only. Keep the response brief and do not include intermediate reasoning."
+
+slow:
+  - id: slow_v1
+    text: "Carefully analyze the image and the question step by step before answering. Then provide the final answer clearly."
+  - id: slow_v2
+    text: "Reason through the visual information and the question in a systematic way. After completing the reasoning, give the final answer."
+  - id: slow_v3
+    text: "Examine the image carefully, consider the relevant visual details, and solve the problem step by step. Finish with a clear final answer."
+
+default:
+  - id: default_v1
+    text: "Answer the question based on the image."

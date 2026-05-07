@@ -1,0 +1,82 @@
+# 不要把数据、模型、运行结果提交到 git
+runs/
+data/pilot/images/
+data/pilot/pilot_index.jsonl
+model/
+
+# python
+__pycache__/
+*.py[cod]
+*.so
+.ipynb_checkpoints/
+.pytest_cache/
+
+# 编辑器
+.vscode/
+.idea/
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+
+# Virtual environments
+.venv/
+venv/
+env/
+conda_env/
+ENV/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+
+# Logs
+logs/
+*.log
+wandb/
+runs/
+tensorboard/
+lightning_logs/
+
+# Data
+data/
+datasets/
+raw_data/
+processed_data/
+
+# Model checkpoints / weights
+checkpoints/
+ckpts/
+outputs/
+results/
+*.pt
+*.pth
+*.ckpt
+*.bin
+*.safetensors
+*.onnx
+
+# Cache
+.cache/
+.cache_*/
+tmp/
+temp/
+*.tmp
+
+# Secrets
+.env
+*.env
+secrets/
+credentials.json
+token.json
+*.pem
+*.key

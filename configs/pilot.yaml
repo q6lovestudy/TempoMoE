@@ -1,0 +1,61 @@
+# pilot 实验配置文件
+# 所有路径都用绝对路径，避免脚本在哪里运行都能定位
+
+paths:
+  # 模型路径（注意有两层 model 目录）
+  model_dir: /data/zhoukeru/q/TempoMoE/model/model/Kimi-VL-A3B-Thinking-2506
+  # 数据相关路径
+  data_root: /data/zhoukeru/q/TempoMoE/data
+  pilot_index: /data/zhoukeru/q/TempoMoE/data/pilot/pilot_index.jsonl
+  # 输出路径
+  run_dir: /data/zhoukeru/q/TempoMoE/runs/pilot
+  main_records: /data/zhoukeru/q/TempoMoE/runs/pilot/main_records.jsonl
+  routes_dir: /data/zhoukeru/q/TempoMoE/runs/pilot/routes
+  # prompt 配置
+  prompts_yaml: /data/zhoukeru/q/TempoMoE/configs/prompts.yaml
+
+# GPU 设置
+# 通过 CUDA_VISIBLE_DEVICES 重映射成 cuda:0 和 cuda:1，让 device_map=auto 处理
+# 注意：服务器是共享的，跑之前先 nvidia-smi 看哪两张最空，再改这里
+# 模型 ~32 GiB bf16 权重，每张卡至少要 28 GiB 空闲才稳
+gpu:
+  # 用 3 张最空的卡分摊权重 + activation
+  # GPU 0 (free 38 GiB, 别人占 7), GPU 1 (free 40, 别人占 5), GPU 4 (free 32, 别人占 12)
+  # 不用 GPU 2/3，他们空闲只有 15 GiB
+  # 3 卡 × 12 GiB = 36 GiB 总权重预算
+  # 每张卡 cap=12 + 别人占用 + 20+ GiB activation 余量都能放下
+  visible_devices: "1,4,5"
+  max_memory_per_gpu: "12GiB"
+  min_free_gib_per_gpu: 25
+
+# 数据采样配置
+# pilot 阶段先用小规模验证 pipeline
+sampling:
+  realworldqa_limit: 50    # pilot 用 50，正式实验改 200-400
+  mathvista_limit: 50
+  random_seed: 42
+
+# 推理配置
+inference:
+  # Stage 1 一律用 greedy，可复现性最重要
+  do_sample: false
+  temperature: 0.0
+  top_p: 1.0
+  # 之前设 1024 偶尔会触发 OOM；slow_v* pilot 实测平均才 123，512 足够
+  max_new_tokens: 512
+  # Kimi-VL 的 thinking 标签
+  think_open_token: "◁think▷"
+  think_close_token: "◁/think▷"
+
+# 路由 hook 配置
+hook:
+  # Kimi-VL 的 MoEGate 模块名（在 modeling_kimi_vl.py 里是 DeepseekV3MoE.gate）
+  # hook 会自动遍历模型，找到所有 MoEGate 实例
+  gate_class_name: "MoEGate"
+  # 是否保存 routing 详情（False 时只保存聚合统计，调试用）
+  save_full_routes: true
+
+# 日志配置
+logging:
+  level: INFO
+  log_every_n_samples: 5
